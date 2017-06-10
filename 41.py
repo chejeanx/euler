@@ -1,33 +1,50 @@
 # Pandigital prime
 # https://projecteuler.net/problem=41
 
-# Sieve of Erastosthenes returning primes up to including n
-def sieveOfErastosthenes(n):
-	isPrime = [True] * (n + 1)
-	isPrime[0] = isPrime[1] = False
-	primes = []
-	for value in range(n + 1):
-		if isPrime[value]:
-			primes.append(value)
-			for multiple in range(value * 2, n + 1, value):
-				isPrime[multiple] = False
-	return primes
+import math
 
-# Returns true if number contains digits 1 to number of digits exactly once, false otherwise
-def isPandigital(n):
-	if len(str(n)) > 9:
-		return False
-
-	for index in range(len(str(n))):
-		if index != int(sorted(str(n))[index]) - 1:
+# Checks if n is prime
+def isPrime(n):
+	if n < 2: return False
+	if n == 2: return True
+	for factor in range(2, math.ceil(math.sqrt(n)) + 1):
+		if n % factor == 0:
 			return False
 	return True
 
-# Returns largest prime with only unique digits
-def largestPandigitalPrime():
-	sieve = sieveOfErastosthenes(987654321)
-	for prime in sieve[::-1]:
-		if isPandigital(prime):
-			return prime
+# Returns n!
+def factorial(n):
+	return 1 if n <= 1 else n * factorial(n - 1)
 
-print(largestPandigitalPrime())
+# Returns permutations of items in inpList in a list
+def getPermutations(inpList):
+	numPerms = factorial(len(inpList))
+	answer = []
+	
+	def getPerms(current, inpList):
+		if len(inpList) == 0:
+			answer.append(current)
+		if len(answer) == numPerms:
+			return
+		for i in range(len(inpList)):
+			getPerms(current + str(inpList[i]), inpList[:i] + inpList[i + 1:])
+	
+	getPerms('', inpList)
+	return answer
+
+# Returns largest prime up to maxDigits in length with only unique digits
+def largestPandigitalPrime(maxDigits):
+	if maxDigits <= 0 or maxDigits > 9:
+		return None
+
+	digits = []
+	pandigitalNums = []
+	for digit in range(1, maxDigits + 1):
+		digits.append(digit)
+		pandigitalNums += getPermutations(digits)
+	for pandigital in pandigitalNums[::-1]:
+		if isPrime(int(pandigital)):
+			return int(pandigital)
+	return None
+
+print(largestPandigitalPrime(9))
