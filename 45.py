@@ -9,7 +9,7 @@ import math
 # 8x + 1 = 4n^2 + 4n + 1 = (2n + 1)^2
 # Therefore if 8x + 1 is an odd perfect square, x is triangular
 def isTriangular(x):
-	return math.sqrt(8 * x + 1) % 1 == 0 and x % 2 == 1
+	return math.sqrt(8 * x + 1) % 1 == 0 and math.sqrt(8 * x + 1) % 2 == 1
 
 # Math for pentagonal:
 # x = n(3n - 1) / 2
